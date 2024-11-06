@@ -2,8 +2,16 @@
     "name": "my-project-monorepo",
     "version": "1.0.0",
     "private": true,
+    "engines": {
+        "node": ">=18.0.0",
+        "npm": ">=8.0.0"
+    },
     "scripts": {
-        "dev": "concurrently \"npm run dev --prefix frontend\" \"cd backend && source ~/miniconda3/etc/profile.d/conda.sh && conda activate pud_eval && FLASK_APP=app.py FLASK_ENV=development flask run\""
+        "dev": "concurrently \"npm run dev --prefix frontend\" \"cd backend && source ~/miniconda3/etc/profile.d/conda.sh && conda activate pud_eval && FLASK_APP=app.py FLASK_ENV=development flask run\"",
+        "start": "cd frontend && npm run build && npm run start",
+        "build": "cd frontend && npm install && npm run build",
+        "heroku-postbuild": "cd frontend && npm install && npm run build",
+        "install": "cd frontend && npm install"
     },
     "devDependencies": {
         "concurrently": "^9.0.1"
@@ -11,5 +19,8 @@
     "dependencies": {
         "-": "^0.0.1",
         "root": "^3.2.0"
-    }
+    },
+    "cacheDirectories": [
+        "frontend/node_modules"
+    ]
 }
