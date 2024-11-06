@@ -20,76 +20,75 @@
 
       <!-- Numeric Controls Group -->
       <div class="flex flex-col gap-2" :class="{ 'opacity-50': !selectedTR }">
-        <label class="text-sm font-medium text-gray-700">Search Parameters</label>
         <div class="grid grid-cols-3 gap-2">
           <!-- Radius Control -->
-          <InputNumber
-            v-model="radius"
-            placeholder="Radius"
-            :min="5"
-            :max="15"
-            :step="1"
-            :disabled="!selectedTR"
-            :minFractionDigits="0"
-            :maxFractionDigits="0"
-            @update:modelValue="handleRadiusChange"
-            buttonLayout="horizontal"
-            :inputStyle="{ width: '100%' }"
-            :showButtons="true"
-          >
-            <template #prefix>
-              <i class="pi pi-search" />
-            </template>
-            <template #footer>
-              <span class="text-xs text-gray-500">Miles</span>
-            </template>
-          </InputNumber>
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Mile Radius</label>
+            <InputNumber
+              v-model="radius"
+              placeholder="Radius"
+              :min="5"
+              :max="15"
+              :step="1"
+              :disabled="!selectedTR"
+              :minFractionDigits="0"
+              :maxFractionDigits="0"
+              @update:modelValue="handleRadiusChange"
+              buttonLayout="horizontal"
+              :inputStyle="{ width: '100%' }"
+              :showButtons="true"
+            >
+              <template #prefix>
+                <i class="pi pi-search" />
+              </template>
+            </InputNumber>
+          </div>
 
           <!-- Lateral Length Min -->
-          <InputNumber
-            v-model="lateralMin"
-            placeholder="Min Length"
-            :min="5000"
-            :max="lateralMax"
-            :step="1000"
-            :disabled="!selectedTR"
-            :minFractionDigits="0"
-            :maxFractionDigits="0"
-            @update:modelValue="handleLateralChange"
-            buttonLayout="horizontal"
-            :inputStyle="{ width: '100%' }"
-            :showButtons="true"
-          >
-            <template #prefix>
-              <i class="pi pi-arrows-h" />
-            </template>
-            <template #footer>
-              <span class="text-xs text-gray-500">Min ft</span>
-            </template>
-          </InputNumber>
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Min Lateral</label>
+            <InputNumber
+              v-model="lateralMin"
+              placeholder="Min Length"
+              :min="5000"
+              :max="lateralMax"
+              :step="1000"
+              :disabled="!selectedTR"
+              :minFractionDigits="0"
+              :maxFractionDigits="0"
+              @update:modelValue="handleLateralChange"
+              buttonLayout="horizontal"
+              :inputStyle="{ width: '100%' }"
+              :showButtons="true"
+            >
+              <template #prefix>
+                <i class="pi pi-arrows-h" />
+              </template>
+            </InputNumber>
+          </div>
 
           <!-- Lateral Length Max -->
-          <InputNumber
-            v-model="lateralMax"
-            placeholder="Max Length"
-            :min="lateralMin"
-            :max="20000"
-            :step="1000"
-            :disabled="!selectedTR"
-            :minFractionDigits="0"
-            :maxFractionDigits="0"
-            @update:modelValue="handleLateralChange"
-            buttonLayout="horizontal"
-            :inputStyle="{ width: '100%' }"
-            :showButtons="true"
-          >
-            <template #prefix>
-              <i class="pi pi-arrows-h" />
-            </template>
-            <template #footer>
-              <span class="text-xs text-gray-500">Max ft</span>
-            </template>
-          </InputNumber>
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Max Lateral</label>
+            <InputNumber
+              v-model="lateralMax"
+              placeholder="Max Length"
+              :min="lateralMin"
+              :max="20000"
+              :step="1000"
+              :disabled="!selectedTR"
+              :minFractionDigits="0"
+              :maxFractionDigits="0"
+              @update:modelValue="handleLateralChange"
+              buttonLayout="horizontal"
+              :inputStyle="{ width: '100%' }"
+              :showButtons="true"
+            >
+              <template #prefix>
+                <i class="pi pi-arrows-h" />
+              </template>
+            </InputNumber>
+          </div>
         </div>
       </div>
 
