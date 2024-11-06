@@ -23,12 +23,11 @@ app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
         "origins": [
-            "http://localhost:3000",  # Development
-            "https://your-frontend-domain.herokuapp.com",  # Production
-            "*"  # Temporarily allow all origins for debugging
+            "http://localhost:3000",
+            "https://your-frontend-domain.herokuapp.com",  # Replace with your actual frontend domain
         ],
-        "methods": ["GET", "POST", "OPTIONS"],  # Explicitly allow POST for production endpoint
-        "allow_headers": ["Content-Type", "Authorization"]
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
     }
 })
 

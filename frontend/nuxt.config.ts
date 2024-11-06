@@ -75,7 +75,6 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      apiBase: '/api',
       flaskBaseUrl: process.env.FLASK_BASE_URL || 'http://localhost:5000'
     }
   },
@@ -108,8 +107,8 @@ export default defineNuxtConfig({
       '/api': {
         target: process.env.FLASK_BASE_URL || 'http://localhost:5000',
         changeOrigin: true,
-        autoRewrite: true
-      },
-    },
+        pathRewrite: { '^/api': '' }
+      }
+    }
   },
 })

@@ -70,12 +70,13 @@ const wellCount = ref(0)
 
 const fetchWellsProduction = async (wells: any[]) => {
   const apis = wells.map(well => well.properties.api_14)
+  const config = useRuntimeConfig()
   
   try {
     loading.value = true
     console.log('Fetching production for APIs:', apis.slice(0, 5))
     
-    const response = await fetch('/api/wells/aggregate-production', {
+    const response = await fetch(`${config.public.flaskBaseUrl}/wells/aggregate-production`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
