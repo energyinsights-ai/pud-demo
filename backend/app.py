@@ -20,16 +20,23 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "http://localhost:3000",
-            "https://your-frontend-domain.herokuapp.com",  # Replace with your actual frontend domain
-        ],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
-    }
-})
+# Update CORS configuration to be more permissive for debugging
+CORS(app, 
+     resources={r"/*": {
+         "origins": ["*"],  # Allow all origins temporarily
+         "methods": ["GET", "POST", "OPTIONS"],
+         "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Origin"],
+         "expose_headers": ["Access-Control-Allow-Origin"],
+         "supports_credentials": False
+     }})
+
+# Add CORS headers to all responses
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
 @app.before_request
 def log_request_info():

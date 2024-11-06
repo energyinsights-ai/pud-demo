@@ -4,11 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "start": "node .output/server/index.mjs",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "start": "nuxt start"
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "lodash": "^4.17.21",

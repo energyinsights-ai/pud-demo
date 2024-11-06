@@ -123,10 +123,17 @@ export const useMapStore = defineStore('map', {
     async fetchTROptions() {
       const config = useRuntimeConfig()
       try {
-        const response = await fetch(`${config.public.flaskBaseUrl}/tr`)
+        const response = await fetch(`${config.public.flaskBaseUrl}/tr`, {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
         this.trData = await response.json()
       } catch (error) {
+        console.error('Error fetching TR options:', error)
         this.trData = { type: 'FeatureCollection', features: [] }
       }
     },
