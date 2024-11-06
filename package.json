@@ -1,0 +1,15 @@
+{
+    "name": "my-project-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "concurrently \"npm run dev --prefix frontend\" \"cd backend && source ~/miniconda3/etc/profile.d/conda.sh && conda activate pud_eval && FLASK_APP=app.py FLASK_ENV=development flask run\""
+    },
+    "devDependencies": {
+        "concurrently": "^9.0.1"
+    },
+    "dependencies": {
+        "-": "^0.0.1",
+        "root": "^3.2.0"
+    }
+}
