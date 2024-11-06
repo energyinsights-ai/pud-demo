@@ -20,7 +20,17 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "http://localhost:3000",  # Development
+            "https://your-frontend-domain.herokuapp.com",  # Production
+            "*"  # Temporarily allow all origins for debugging
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],  # Explicitly allow POST for production endpoint
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 @app.before_request
 def log_request_info():
@@ -327,6 +337,10 @@ def get_well_production(api_14):
 @app.route('/wells/aggregate-production', methods=['POST'])
 def get_aggregate_production():
     try:
+        # Log the incoming request
+        logger.info(f"Received production request - Headers: {request.headers}")
+        logger.info(f"Request data: {request.get_data()}")
+        
         api_list = request.json.get('apis', [])
         if not api_list:
             logger.warning("No APIs provided in request")
@@ -335,11 +349,29 @@ def get_aggregate_production():
                 "message": "Please provide a list of API14s"
             }), 400
 
-        logger.info(f"Starting production fetch for {len(api_list)} wells")
+        logger.info(f"Processing production for APIs: {api_list[:5]}...")  # Log first 5 APIs
         
         conn = get_db_connection()
         cur = conn.cursor(cursor_factory=RealDictCursor)
         
+        # Verify APIs exist in the database
+        cur.execute("""
+            SELECT DISTINCT api_14 
+            FROM demo.wells 
+            WHERE api_14 = ANY(%s)
+        """, (api_list,))
+        found_apis = [row['api_14'] for row in cur.fetchall()]
+        
+        if not found_apis:
+            logger.warning(f"No matching APIs found in database")
+            return jsonify({
+                "error": "No matching wells",
+                "message": "None of the provided APIs were found in the database",
+                "requested_apis": api_list
+            }), 404
+            
+        logger.info(f"Found {len(found_apis)} matching wells in database")
+
         # Query to get individual well production data normalized by months
         query = """
             WITH first_prod AS (

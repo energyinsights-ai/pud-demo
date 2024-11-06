@@ -138,7 +138,10 @@ export const useMapStore = defineStore('map', {
       const config = useRuntimeConfig()
       try {
         const response = await fetch(`${config.public.flaskBaseUrl}/wells/${tr}?radius=${this.radius}`)
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+        }
         const wellsData = await response.json() as FeatureCollection
         
         if (wellsData.type !== 'FeatureCollection') {
@@ -161,7 +164,9 @@ export const useMapStore = defineStore('map', {
 
         this.updateMapView()
       } catch (error) {
+        console.error('Error fetching wells:', error)
         this.wellsData = { type: 'FeatureCollection', features: [] }
+        throw error // Re-throw to handle in components if needed
       } finally {
         this.isLoadingWells = false
       }
@@ -253,6 +258,37 @@ export const useMapStore = defineStore('map', {
       if (this.map && this.map.getSource('wells-data')) {
         const source = this.map.getSource('wells-data') as maplibregl.GeoJSONSource
         source.setData(this.filteredWells)
+      }
+    },
+
+    async fetchWellProduction(apis: string[]) {
+      if (!apis.length) return null
+      
+      const config = useRuntimeConfig()
+      try {
+        const response = await fetch(`${config.public.flaskBaseUrl}/wells/aggregate-production`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ apis }),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          console.error('Production fetch error:', errorData)
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+        }
+
+        const data = await response.json()
+        if (!data.success) {
+          throw new Error(data.message || 'Failed to fetch production data')
+        }
+
+        return data.data
+      } catch (error) {
+        console.error('Error fetching production:', error)
+        throw error
       }
     }
   }

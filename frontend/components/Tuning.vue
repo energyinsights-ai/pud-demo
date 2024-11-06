@@ -172,9 +172,14 @@ onMounted(async () => {
 })
 
 // Watch for changes and update store
-watch(() => selectedTR.value, (newTR) => {
+watch(() => selectedTR.value, async (newTR) => {
   if (newTR !== undefined) {
-    mapStore.setSelectedTR(newTR)
+    try {
+      await mapStore.setSelectedTR(newTR)
+    } catch (error) {
+      // Handle error appropriately, maybe show a toast notification
+      console.error('Error fetching well data:', error)
+    }
   }
 })
 

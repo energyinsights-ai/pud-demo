@@ -72,6 +72,9 @@ const fetchWellsProduction = async (wells: any[]) => {
   const apis = wells.map(well => well.properties.api_14)
   
   try {
+    loading.value = true
+    console.log('Fetching production for APIs:', apis.slice(0, 5))
+    
     const response = await fetch('/api/wells/aggregate-production', {
       method: 'POST',
       headers: {
@@ -79,16 +82,30 @@ const fetchWellsProduction = async (wells: any[]) => {
       },
       body: JSON.stringify({ apis })
     })
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      console.error('Production fetch error:', errorData)
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+    }
+    
     const data = await response.json()
+    console.log('Production response:', data)
     
     if (data.success) {
       wellsData.value = data.data
       wellCount.value = data.well_count
     } else {
-      console.error('Error fetching well data:', data.error)
+      console.error('Error in production response:', data.error)
+      throw new Error(data.message || 'Failed to fetch production data')
     }
   } catch (error) {
     console.error('Error fetching production:', error)
+    wellsData.value = {}
+    wellCount.value = 0
+    throw error
+  } finally {
+    loading.value = false
   }
 }
 
